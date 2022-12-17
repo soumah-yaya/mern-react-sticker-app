@@ -3,11 +3,10 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const User = require('../services/userService')
-const Userb = require('../models/userDAO')
 
 // @desc register user 
 // @route GET /api/users/register
-// @access Private
+// @access public
 exports.registerUser = asyncHandler(async (req, res) => {
 
     const { name, email, password } = req.body
@@ -46,7 +45,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 
 // @desc login user
 // @route GET /api/users/login
-// @access Private
+// @access public
 exports.loginUser = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body

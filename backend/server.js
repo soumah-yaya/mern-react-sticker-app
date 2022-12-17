@@ -5,6 +5,7 @@ const cors = require('cors')
 const { errorHandler } = require('./middleware/errorMiddleware')
 
 const users = require('./routes/usersRoute')
+const stickers = require('./routes/stickersRoute')
 
 require('colors')
 require('dotenv').config()
@@ -25,6 +26,7 @@ app.use(expressjwt({
 }).unless({ path: ["/api/users", "/api/users/login"] }))
 
 app.use('/api/users', users)
+app.use('/api/stickers', stickers)
 
 app.use(errorHandler)
 
