@@ -1,8 +1,9 @@
 const express = require('express')
+const db = require('./db/connect')
 
 require('colors')
 require('dotenv').config()
-
+db.connect()
 const config = process.env
 
 const app = express()
