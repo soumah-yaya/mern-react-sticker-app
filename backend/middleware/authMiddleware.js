@@ -5,11 +5,7 @@ const User = require('../services/userService');
 
 const protect = asyncHandler(async(req,res,next)=>{
     let token = req.headers.authorization?.split(' ')[1]
-    if(!token){
-        console.log('no token')
-        // throw new Error("token is required")
-        next()
-    }
+   
     // verify the token
     const decoded = jwt.verify(token, process.env.SECRET_KEY)
 
@@ -20,4 +16,4 @@ const protect = asyncHandler(async(req,res,next)=>{
     next()
 })
 
-module.exports = {protect}
+module.exports = {protect};

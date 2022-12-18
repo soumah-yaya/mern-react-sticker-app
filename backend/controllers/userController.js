@@ -58,14 +58,14 @@ exports.loginUser = asyncHandler(async (req, res) => {
     
     if (!user) {
         res.status(400)
-        throw new Error('the email is incorrect')
+        throw new Error('unknown email')
     } else {
         // match the passwords
         
         const isValid = isValidPassword(password, user.password)
         if (!isValid) {
             res.status(400)
-            throw new Error('the password is incorrect')
+            throw new Error('password is incorrect')
         }
         res.status(200).json({
             data: {

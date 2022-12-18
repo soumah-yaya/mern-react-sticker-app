@@ -2,6 +2,7 @@ const express = require('express')
 const { expressjwt } = require('express-jwt')
 const db = require('./db/connect')
 const cors = require('cors')
+
 const { errorHandler } = require('./middleware/errorMiddleware')
 
 const users = require('./routes/usersRoute')
@@ -18,6 +19,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
+
 
     // verify token
 app.use(expressjwt({
