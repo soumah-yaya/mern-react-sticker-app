@@ -1,51 +1,41 @@
-// import axios from '../../utils/request'
-import axios from 'axios'
+import api from '../../utils/request'
 
-// register user
-const API_URL = '/api/goals/'
-
-// create new goal
-const createGoal = async (goalData, token) => {
-    const config = {
-        headers: {
-            // Authorization: `Bearer ${token}`
-            Authorization: token
-        }
-    }
-    const response = await axios.post(API_URL, goalData, config)
-    console.log('data create', response.data)
-    return response.data
+// create new sticker
+const createSticker = async (stickerData) => {
+    
+    const { data: res } = await api.post('/stickers', { text: stickerData })
+    return res.data
 }
-// get goals
-const getGoals = async (token) => {
 
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-    const response = await axios.get(API_URL, config)
+// get all stickers
+const getStickers = async () => {
+
+    const {data: res} = await api.get('/stickers')
+    
+    return res.data
+}
+
+// update a sticker
+const updateSticker = async (stickerId) => {
+
+    const response = await api.put('/stickers/' + stickerId)
     return response.data
 }
 
-// delete goal
-const deleteGoal = async (goalId, token) => {
+// delete sticker
+const deleteSticker = async (stickerId) => {
 
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-    const response = await axios.delete(API_URL + goalId, config)
-    // const response = await axios.delete(API_URL + goalId)
-    return response.data
+    const {data:res} = await api.delete('/stickers/' + stickerId)
+   
+    return res.data
 }
 
 
 const goalService = {
-    createGoal,
-    getGoals,
-    deleteGoal,
+    createSticker,
+    getStickers,
+    deleteSticker,
+    updateSticker,
 
 }
 export default goalService

@@ -1,95 +1,113 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import stickerService from './stickerService'
 
+
 const initialState = {
-    goals: [],
+    stickers: [],
     isError: false,
-    isSuccess: false,
     isLoading: false,
     message: '',
 }
 
-//create new goal
-export const createGoal = createAsyncThunk('goals/create', async (goalData, thunkAPI) => {
+//create new sticker
+export const createSticker = createAsyncThunk('sticker/create', async (stickerData, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token
-        return await stickerService.createGoal(goalData, token)
+       
+        return await stickerService.createSticker(stickerData)
 
     } catch (error) {
         const message = (error.response && error.response.data && error.reponse.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+//update sticker
+export const updateSticker = createAsyncThunk('sticker/update', async (stickerId, thunkAPI) => {
+    try {
+       
+        return await stickerService.updateSticker(stickerId)
+
+    } catch (error) {
+        const message = (error.response && error.response.data && error.reponse.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 //delete new goal
-export const deleteGoal = createAsyncThunk('goals/delete', async (id, thunkAPI) => {
-    try {
-
-        const token = thunkAPI.getState().auth.user.token
-        return await stickerService.deleteGoal(id, token)
-    } catch (error) {
-        const message = (error.response && error.response.data && error.reponse.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
-    }
-})
-// get goals
-export const getGoals = createAsyncThunk('goals/getAll', async (_, thunkAPI) => {
-    try {
-
-        const token = thunkAPI.getState().auth.user.token
-        return await stickerService.getGoals(token)
+export const deleteSticker = createAsyncThunk('sticker/delete', async (stickerId, thunkAPI) => {
+    try {        
+        return await stickerService.deleteSticker(stickerId)
     } catch (error) {
         const message = (error.response && error.response.data && error.reponse.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
 
-export const goalSlice = createSlice({
-    name: 'goal',
-    initialState,
-    reducers: {
-        reset: (state) => initialState
-    },
+// get all stickers
+export const getStickers = createAsyncThunk('sticker/all', async (_, thunkAPI) => {
+    try {     
+        return await stickerService.getStickers()
+    } catch (error) {
+        const message = (error.response && error.response.data && error.reponse.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+export const stickerSlice = createSlice({
+    name: 'sticker',
+    initialState,    
     extraReducers: (builder) => {
         builder
-            .addCase(createGoal.pending, (state) => {
+            .addCase(createSticker.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(createGoal.fulfilled, (state, action) => {
+            .addCase(createSticker.fulfilled, (state, action) => {
 
                 state.isLoading = false
-                state.isSuccess = true
-                state.goals.push(action.payload)
+                state.stickers.push(action.payload)
             })
-            .addCase(createGoal.rejected, (state, action) => {
+            .addCase(createSticker.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(getGoals.pending, (state) => {
+            .addCase(getStickers.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(getGoals.fulfilled, (state, action) => {
-                console.log('state', state)
+            .addCase(getStickers.fulfilled, (state, action) => {
                 state.isLoading = false
-                state.isSuccess = true
-                state.goals = action.payload
+                state.stickers = action.payload
             })
-            .addCase(getGoals.rejected, (state, action) => {
+            .addCase(getStickers.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(deleteGoal.pending, (state) => {
+            .addCase(deleteSticker.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(deleteGoal.fulfilled, (state, action) => {
+            .addCase(deleteSticker.fulfilled, (state, action) => {
                 state.isLoading = false
-                state.isSuccess = true
-                state.goals = state.goals.filter((goal) => {
+                state.stickers = state.stickers.filter((item) => {
+                    return item._id !== action.payload.id
+                })
+               
+            })
+            .addCase(deleteSticker.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(updateSticker.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updateSticker.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.stickers = state.stickers.filter((goal) => {
                     return goal._id !== action.payload.id
                 })
             })
-            .addCase(deleteGoal.rejected, (state, action) => {
+            .addCase(updateSticker.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
@@ -97,5 +115,5 @@ export const goalSlice = createSlice({
     }
 })
 
-export const { reset } = goalSlice.actions
-export default goalSlice.reducer
+export const { reset } = stickerSlice.actions
+export default stickerSlice.reducer
