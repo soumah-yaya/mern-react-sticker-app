@@ -2,6 +2,7 @@ const express = require('express')
 const { expressjwt } = require('express-jwt')
 const db = require('./db/connect')
 const cors = require('cors')
+const path = require('path')
 
 const { errorHandler } = require('./middleware/errorMiddleware')
 
@@ -22,13 +23,23 @@ app.use(express.urlencoded({extended:false}))
 
 
     // verify token
-app.use(expressjwt({
-    secret: config.SECRET_KEY,
-    algorithms: ['HS256'],
-}).unless({ path: ["/api/users", "/api/users/login"] }))
+// app.use(expressjwt({
+//     secret: config.SECRET_KEY,
+//     algorithms: ['HS256'],
+// }).unless({ path: ["/api/users", "/api/users/login"] }))
+
+
 
 app.use('/api/users', users)
 app.use('/api/stickers', stickers)
+
+// serve frontend
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/build')))
+    app.get('*', (req, res) => {
+        return res.sendFile(path.resolve(__dirname, '../', 'frontend', 'build', 'index.html'))
+    })
+}
 
 app.use(errorHandler)
 
